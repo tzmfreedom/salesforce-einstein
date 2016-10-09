@@ -17,16 +17,14 @@ module Metamind
       end
       @email = email
       @boundary = SecureRandom.hex(10)
-    end
 
-    def authorize
       jwt = JWT.encode({
-                     iss: 'developer.force.com',
-                     sub: @email,
-                     aud: 'https://api.metamind.io/v1/oauth2/token',
-                     iat: Time.now.to_i,
-                     exp: Time.now.to_i + 3600
-                 }, @private_key, 'RS256')
+                           iss: 'developer.force.com',
+                           sub: @email,
+                           aud: 'https://api.metamind.io/v1/oauth2/token',
+                           iat: Time.now.to_i,
+                           exp: Time.now.to_i + 3600
+                       }, @private_key, 'RS256')
 
       uri = URI.parse('https://api.metamind.io/v1/oauth2/token')
       http = Net::HTTP.new(uri.host, uri.port)
@@ -54,7 +52,79 @@ module Metamind
       post 'https://api.metamind.io/v1/vision/predict', {sampleBase64Content: base64_string, modelId: modelId}
     end
 
+    def create_dataset name, labels
+      post 'https://api.metamind.io/v1/vision/datasets', {name: name, labels: labels}
+    end
+
+    def get_all_datasets
+      get 'https://api.metamind.io/v1/vision/datasets'
+    end
+
+    def get_dataset dataset_id
+      get "https://api.metamind.io/v1/vision/datasets/#{dataset_id}"
+    end
+
+    def delete_dataset dataset_id
+      delete "https://api.metamind.io/v1/vision/datasets/#{dataset_id}"
+    end
+
+    def create_label dataset_id, name
+      post "https://api.metamind.io/v1/vision/datasets/#{dataset_id}/labels", name: name
+    end
+
+    def get_label dataset_id, label_id
+      get "https://api.metamind.io/v1/vision/datasets/#{dataset_id}/labels/#{label_id}"
+    end
+
+    def create_example dataset_id, params
+      post "https://api.metamind.io/v1/vision/datasets/#{dataset_id}/examples", params
+    end
+
+    def get_example dataset_id, example_id
+      get "https://api.metamind.io/v1/vision/datasets/#{dataset_id}/examples/#{example_id}"
+    end
+
+    def get_all_example dataset_id
+      get "https://api.metamind.io/v1/vision/datasets/#{dataset_id}/examples"
+    end
+
+    def delete_example dataset_id, example_id
+      delete "https://api.metamind.io/v1/vision/datasets/#{dataset_id}/examples/#{example_id}"
+    end
+
+    def train_dataset params
+      post 'https://api.metamind.io/v1/vision/train', params
+    end
+
+    def get_training_status model_id
+      get "https://api.metamind.io/v1/vision/train/#{model_id}"
+    end
+
+    def get_model_metrics model_id
+      get "https://api.metamind.io/v1/vision/models/#{model_id}"
+    end
+
+    def get_all_models dataset_id
+      get "https://api.metamind.io/v1/vision/datasets/#{dataset_id}/models"
+    end
+
     private
+
+    def get url
+      uri = URI.parse(url)
+      http = Net::HTTP.new(uri.host, uri.port)
+
+      http.use_ssl = true
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      http.set_debug_output($stderr)
+
+      req = Net::HTTP::Get.new(uri.path)
+      req['Accept-Encoding'] = ''
+      req['Authorization'] = "Bearer #{@access_token}"
+
+      res = http.request(req)
+      JSON.parse(res.body)
+    end
 
     def post url, params
       uri = URI.parse(url)
@@ -69,6 +139,21 @@ module Metamind
       req['Authorization'] = "Bearer #{@access_token}"
       req.body = build_multipart_query(params)
       puts req.body
+
+      res = http.request(req)
+      JSON.parse(res.body)
+    end
+
+    def delete url
+      uri = URI.parse(url)
+      http = Net::HTTP.new(uri.host, uri.port)
+
+      http.use_ssl = true
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      http.set_debug_output($stderr)
+
+      req = Net::HTTP::Delete.new(uri.path)
+      req['Authorization'] = "Bearer #{@access_token}"
 
       res = http.request(req)
       JSON.parse(res.body)
