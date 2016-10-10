@@ -33,7 +33,6 @@ module Metamind
 
       http.use_ssl = true
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      # http.set_debug_output($stderr)
 
       req = Net::HTTP::Post.new(uri.path)
       req.set_form_data({grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer', assertion: jwt})
@@ -122,7 +121,6 @@ module Metamind
 
       http.use_ssl = true
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      http.set_debug_output($stderr)
 
       req = Net::HTTP::Get.new(uri.path)
       req['Accept-Encoding'] = 'identity'
@@ -138,7 +136,6 @@ module Metamind
 
       http.use_ssl = true
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      http.set_debug_output($stderr)
 
       req = Net::HTTP::Post.new(uri.path)
       req['Content-Type'] = "multipart/form-data; boundary=#{@boundary}"
@@ -155,7 +152,6 @@ module Metamind
 
       http.use_ssl = true
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      http.set_debug_output($stderr)
 
       req = Net::HTTP::Delete.new(uri.path)
       req['Authorization'] = "Bearer #{@access_token}"
