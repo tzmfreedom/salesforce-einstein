@@ -1,8 +1,8 @@
 # Metamind
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/metamind`. To experiment with that code, run `bin/console` for an interactive prompt.
+[![Build Status](https://travis-ci.org/tzmfreedom/metamind-ruby.svg?branch=master)](https://travis-ci.org/tzmfreedom/metamind-ruby)
 
-TODO: Delete this and the text above, and describe your gem
+API Client for Salesforce MetaMind(http://metamind.io)
 
 ## Installation
 
@@ -22,7 +22,98 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+- Initialize Client
+```ruby
+client = Metamind::Client.new(cert: '/path/to/certificate', 
+                              password: 'certificate password', 
+                              email: 'metamind account email')
+```
+or
+```ruby
+client = Metamind::Client.new(private_key: '/path/to/private_key', 
+                              password: 'private_key password', 
+                              email: 'metamind account email')
+```
+
+- Prediction with Image URL
+```ruby
+client.predict_by_url 'url', 'modelId'
+```
+
+- Create a Dataset
+```ruby
+client.create_dataset 'name', 'labels'
+```
+
+- Get a Dataset
+```ruby
+client.get_dataset 'dataset_id'
+```
+
+- Get All Datasets
+```ruby
+client.get_all_datasets
+```
+
+- Delete a Dataset
+```ruby
+client.delete_dataset 'dataset_id'
+```
+
+- Create a Label
+```ruby
+client.create_label 'dataset_id', 'name'
+```
+
+- Get a Label
+```ruby
+client.get_label 'dataset_id', 'label_id'
+```
+
+- Create an Example
+```ruby
+client.create_example 'dataset_id', params
+```
+
+- Get an Example
+```ruby
+client.get_example 'dataset_id', 'example_id'
+```
+
+- Get All Examples
+```ruby
+client.get_all_example 'dataset_id'
+```
+
+- Delete an Example
+```ruby
+client.delete_example 'dataset_id', 'example_id'
+```
+
+- Train a Dataset
+```ruby
+client.train_dataset params
+```
+
+- Get Training Status
+```ruby
+client.get_training_status 'model_id'
+```
+
+- Get Model Metrics
+```ruby
+client.get_model_metrics 'model_id'
+```
+
+- Get Model Metrics
+```ruby
+client.get_all_models 'dataset_id'
+```
+
+- Get All Models
+```ruby
+client.get_all_datasets
+```
 
 ## Development
 
