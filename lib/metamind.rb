@@ -7,13 +7,15 @@ require 'securerandom'
 module Metamind
   CRLF = "\r\n"
 
+  METAMIND_VISION_API = 'https://api.metamind.io/v1/vision'
+
   class Client
     def initialize cert: nil, private_key: nil, password: nil, email: nil
       if !cert.nil?
         pkcs12 = OpenSSL::PKCS12::new(File.read(cert), password)
         @private_key = pkcs12.key
       elsif !private_key.nil?
-        @private_key = private_key
+        @private_key = OpenSSL::PKey::RSA.new(File.read(private_key), password)
       end
       @email = email
       @boundary = SecureRandom.hex(10)
@@ -40,72 +42,76 @@ module Metamind
       @access_token = JSON.parse(res.body)['access_token']
     end
 
+    def access_token
+      @access_token
+    end
+
     def predict_by_url url, modelId = 'GeneralImageClassifier'
-      post 'https://api.metamind.io/v1/vision/predict', {sampleLocation: url, modelId: modelId}
+      post "/predict", {sampleLocation: url, modelId: modelId}
     end
 
     def predict_by_file path, modelId = 'GeneralImageClassifier'
-      post 'https://api.metamind.io/v1/vision/predict', {sampleContent: path, modelId: modelId}
+      post "#{METAMIND_VISION_API}/predict", {sampleContent: path, modelId: modelId}
     end
 
     def predict_by_base64 base64_string, modelId = 'GeneralImageClassifier'
-      post 'https://api.metamind.io/v1/vision/predict', {sampleBase64Content: base64_string, modelId: modelId}
+      post "#{METAMIND_VISION_API}/predict", {sampleBase64Content: base64_string, modelId: modelId}
     end
 
     def create_dataset name, labels
-      post 'https://api.metamind.io/v1/vision/datasets', {name: name, labels: labels}
+      post "#{METAMIND_VISION_API}/datasets", {name: name, labels: labels}
     end
 
     def get_all_datasets
-      get 'https://api.metamind.io/v1/vision/datasets'
+      get "#{METAMIND_VISION_API}/datasets"
     end
 
     def get_dataset dataset_id
-      get "https://api.metamind.io/v1/vision/datasets/#{dataset_id}"
+      get "#{METAMIND_VISION_API}/datasets/#{dataset_id}"
     end
 
     def delete_dataset dataset_id
-      delete "https://api.metamind.io/v1/vision/datasets/#{dataset_id}"
+      delete "#{METAMIND_VISION_API}/datasets/#{dataset_id}"
     end
 
     def create_label dataset_id, name
-      post "https://api.metamind.io/v1/vision/datasets/#{dataset_id}/labels", name: name
+      post "#{METAMIND_VISION_API}/datasets/#{dataset_id}/labels", name: name
     end
 
     def get_label dataset_id, label_id
-      get "https://api.metamind.io/v1/vision/datasets/#{dataset_id}/labels/#{label_id}"
+      get "#{METAMIND_VISION_API}/datasets/#{dataset_id}/labels/#{label_id}"
     end
 
     def create_example dataset_id, params
-      post "https://api.metamind.io/v1/vision/datasets/#{dataset_id}/examples", params
+      post "#{METAMIND_VISION_API}/datasets/#{dataset_id}/examples", params
     end
 
     def get_example dataset_id, example_id
-      get "https://api.metamind.io/v1/vision/datasets/#{dataset_id}/examples/#{example_id}"
+      get "#{METAMIND_VISION_API}/datasets/#{dataset_id}/examples/#{example_id}"
     end
 
     def get_all_example dataset_id
-      get "https://api.metamind.io/v1/vision/datasets/#{dataset_id}/examples"
+      get "#{METAMIND_VISION_API}/datasets/#{dataset_id}/examples"
     end
 
     def delete_example dataset_id, example_id
-      delete "https://api.metamind.io/v1/vision/datasets/#{dataset_id}/examples/#{example_id}"
+      delete "#{METAMIND_VISION_API}/datasets/#{dataset_id}/examples/#{example_id}"
     end
 
     def train_dataset params
-      post 'https://api.metamind.io/v1/vision/train', params
+      post "#{METAMIND_VISION_API}/train", params
     end
 
     def get_training_status model_id
-      get "https://api.metamind.io/v1/vision/train/#{model_id}"
+      get "#{METAMIND_VISION_API}/train/#{model_id}"
     end
 
     def get_model_metrics model_id
-      get "https://api.metamind.io/v1/vision/models/#{model_id}"
+      get "#{METAMIND_VISION_API}/models/#{model_id}"
     end
 
     def get_all_models dataset_id
-      get "https://api.metamind.io/v1/vision/datasets/#{dataset_id}/models"
+      get "#{METAMIND_VISION_API}/datasets/#{dataset_id}/models"
     end
 
     private
@@ -119,7 +125,7 @@ module Metamind
       http.set_debug_output($stderr)
 
       req = Net::HTTP::Get.new(uri.path)
-      req['Accept-Encoding'] = ''
+      req['Accept-Encoding'] = 'identity'
       req['Authorization'] = "Bearer #{@access_token}"
 
       res = http.request(req)
@@ -138,7 +144,6 @@ module Metamind
       req['Content-Type'] = "multipart/form-data; boundary=#{@boundary}"
       req['Authorization'] = "Bearer #{@access_token}"
       req.body = build_multipart_query(params)
-      puts req.body
 
       res = http.request(req)
       JSON.parse(res.body)
