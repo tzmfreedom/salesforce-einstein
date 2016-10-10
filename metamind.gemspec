@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = %q{API client for Salesforce MetaMind.}
   spec.description   = %q{API client for Salesforce MetaMind.}
-  spec.homepage      = "https://www.github.com/tzmfreedom"
+  spec.homepage      = "https://github.com/tzmfreedom/metamind-ruby"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
@@ -30,8 +30,11 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
+  spec.add_runtime_dependency "jwt"
+
   spec.add_development_dependency "bundler", "~> 1.13"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 3.0"
-  spec.add_development_dependency "jwt"
+  spec.add_development_dependency "webmock"
+  spec.add_development_dependency "timecop"
 end
