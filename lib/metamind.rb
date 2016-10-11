@@ -3,14 +3,16 @@ require 'jwt'
 require 'net/https'
 require 'securerandom'
 
-
 module Metamind
   CRLF = "\r\n"
-
   METAMIND_VISION_API = 'https://api.metamind.io/v1/vision'
 
   class Client
-    def initialize cert: nil, private_key: nil, password: nil, email: nil
+    def initialize cert: nil, private_key: nil, password: nil, email:
+      if cert.nil? && private_key.nil?
+        raise ArgumentError.new 'At least one parameter must be specified: cert or private_key'
+      end
+
       if !cert.nil?
         pkcs12 = OpenSSL::PKCS12::new(File.read(cert), password)
         @private_key = pkcs12.key
