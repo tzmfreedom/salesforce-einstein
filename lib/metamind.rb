@@ -21,29 +21,10 @@ module Metamind
       end
       @email = email
       @boundary = SecureRandom.hex(10)
-
-      jwt = JWT.encode({
-                           iss: 'developer.force.com',
-                           sub: @email,
-                           aud: 'https://api.metamind.io/v1/oauth2/token',
-                           iat: Time.now.to_i,
-                           exp: Time.now.to_i + 3600
-                       }, @private_key, 'RS256')
-
-      uri = URI.parse('https://api.metamind.io/v1/oauth2/token')
-      http = Net::HTTP.new(uri.host, uri.port)
-
-      http.use_ssl = true
-      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-
-      req = Net::HTTP::Post.new(uri.path)
-      req.set_form_data({grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer', assertion: jwt})
-
-      res = http.request(req)
-      @access_token = JSON.parse(res.body)['access_token']
     end
 
     def access_token
+      get_access_token if @access_token.nil?
       @access_token
     end
 
@@ -126,7 +107,7 @@ module Metamind
 
       req = Net::HTTP::Get.new(uri.path)
       req['Accept-Encoding'] = 'identity'
-      req['Authorization'] = "Bearer #{@access_token}"
+      req['Authorization'] = "Bearer #{access_token}"
 
       res = http.request(req)
       JSON.parse(res.body)
@@ -141,7 +122,7 @@ module Metamind
 
       req = Net::HTTP::Post.new(uri.path)
       req['Content-Type'] = "multipart/form-data; boundary=#{@boundary}"
-      req['Authorization'] = "Bearer #{@access_token}"
+      req['Authorization'] = "Bearer #{access_token}"
       req.body = build_multipart_query(params)
 
       res = http.request(req)
@@ -156,7 +137,7 @@ module Metamind
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
       req = Net::HTTP::Delete.new(uri.path)
-      req['Authorization'] = "Bearer #{@access_token}"
+      req['Authorization'] = "Bearer #{access_token}"
 
       res = http.request(req)
       JSON.parse(res.body)
@@ -182,6 +163,28 @@ module Metamind
         parts << lines.join(CRLF)
       end
       parts.join(CRLF) + "#{CRLF}--#{@boundary}--"
+    end
+
+    def get_access_token
+      jwt = JWT.encode({
+                           iss: 'developer.force.com',
+                           sub: @email,
+                           aud: 'https://api.metamind.io/v1/oauth2/token',
+                           iat: Time.now.to_i,
+                           exp: Time.now.to_i + 3600
+                       }, @private_key, 'RS256')
+
+      uri = URI.parse('https://api.metamind.io/v1/oauth2/token')
+      http = Net::HTTP.new(uri.host, uri.port)
+
+      http.use_ssl = true
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+      req = Net::HTTP::Post.new(uri.path)
+      req.set_form_data({grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer', assertion: jwt})
+
+      res = http.request(req)
+      @access_token = JSON.parse(res.body)['access_token']
     end
   end
 end
