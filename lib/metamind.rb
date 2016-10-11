@@ -45,15 +45,15 @@ module Metamind
       @access_token
     end
 
-    def predict_by_url url, modelId = 'GeneralImageClassifier'
+    def predict_with_url url, modelId = 'GeneralImageClassifier'
       post "/predict", {sampleLocation: url, modelId: modelId}
     end
 
-    def predict_by_file path, modelId = 'GeneralImageClassifier'
-      post "#{METAMIND_VISION_API}/predict", {sampleContent: path, modelId: modelId}
-    end
+    # def predict_with_file path, modelId = 'GeneralImageClassifier'
+    #   post "#{METAMIND_VISION_API}/predict", {sampleContent: path, modelId: modelId}
+    # end
 
-    def predict_by_base64 base64_string, modelId = 'GeneralImageClassifier'
+    def predict_with_base64 base64_string, modelId = 'GeneralImageClassifier'
       post "#{METAMIND_VISION_API}/predict", {sampleBase64Content: base64_string, modelId: modelId}
     end
 

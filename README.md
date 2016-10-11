@@ -37,7 +37,12 @@ client = Metamind::Client.new(private_key: '/path/to/private_key',
 
 - Prediction with Image URL
 ```ruby
-client.predict_by_url 'url', 'modelId'
+client.predict_with_url 'url', 'modelId'
+```
+
+- Prediction with Image Base64 String
+```ruby
+client.predict_with_base64 'base64 string', 'modelId'
 ```
 
 - Create a Dataset
@@ -105,14 +110,9 @@ client.get_training_status 'model_id'
 client.get_model_metrics 'model_id'
 ```
 
-- Get Model Metrics
-```ruby
-client.get_all_models 'dataset_id'
-```
-
 - Get All Models
 ```ruby
-client.get_all_datasets
+client.get_all_models 'dataset_id'
 ```
 
 ## Development
@@ -123,7 +123,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/metamind.
+Bug reports and pull requests are welcome on GitHub at https://github.com/tzmfreedom/metamind.
 
 
 ## License
