@@ -29,7 +29,7 @@ module Metamind
     end
 
     def predict_with_url url, modelId = 'GeneralImageClassifier'
-      post "/predict", {sampleLocation: url, modelId: modelId}
+      post "#{METAMIND_VISION_API}/predict", {sampleLocation: url, modelId: modelId}
     end
 
     # def predict_with_file path, modelId = 'GeneralImageClassifier'

@@ -73,6 +73,7 @@ describe Metamind do
       }
     }
     let(:model_id) { '5' }
+    let(:url) { 'http://example.com/sample.jpg' }
     it 'get all datasets' do
       stub_request(:get, "#{Metamind::METAMIND_VISION_API}/datasets")
           .to_return(body: {}.to_json, status: 200, headers: {'Content-Type' => 'application/json'})
@@ -168,6 +169,14 @@ describe Metamind do
           .to_return(body: {}.to_json, status: 200, headers: {'Content-Type' => 'application/json'})
       client.get_training_status model_id
       expect(WebMock).to have_requested(:get, "#{Metamind::METAMIND_VISION_API}/train/#{model_id}").
+          with(headers: { Authorization: "Bearer #{client.access_token}"})
+    end
+
+    it 'predict with image url' do
+      stub_request(:post, "#{Metamind::METAMIND_VISION_API}/predict")
+          .to_return(body: {}.to_json, status: 200, headers: {'Content-Type' => 'application/json'})
+      client.predict_with_url url
+      expect(WebMock).to have_requested(:post, "#{Metamind::METAMIND_VISION_API}/predict").
           with(headers: { Authorization: "Bearer #{client.access_token}"})
     end
 
