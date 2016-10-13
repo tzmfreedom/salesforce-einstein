@@ -74,6 +74,7 @@ describe Metamind do
     }
     let(:model_id) { '5' }
     let(:url) { 'http://example.com/sample.jpg' }
+    let(:base64string) { 'base64' }
     it 'get all datasets' do
       stub_request(:get, "#{Metamind::METAMIND_VISION_API}/datasets")
           .to_return(body: {}.to_json, status: 200, headers: {'Content-Type' => 'application/json'})
@@ -147,7 +148,6 @@ describe Metamind do
           with(headers: { Authorization: "Bearer #{client.access_token}"})
     end
 
-    ###
     it 'delete an example' do
       stub_request(:delete, "#{Metamind::METAMIND_VISION_API}/datasets/#{dataset_id}/examples/#{example_id}")
           .to_return(body: {}.to_json, status: 200, headers: {'Content-Type' => 'application/json'})
@@ -180,5 +180,12 @@ describe Metamind do
           with(headers: { Authorization: "Bearer #{client.access_token}"})
     end
 
+    it 'predict with image base64 string' do
+      stub_request(:post, "#{Metamind::METAMIND_VISION_API}/predict")
+          .to_return(body: {}.to_json, status: 200, headers: {'Content-Type' => 'application/json'})
+      client.predict_with_base64 base64string
+      expect(WebMock).to have_requested(:post, "#{Metamind::METAMIND_VISION_API}/predict").
+          with(headers: { Authorization: "Bearer #{client.access_token}"})
+    end
   end
 end
