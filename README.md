@@ -1,15 +1,15 @@
-# Metamind
+# Salesforce Einstein
 
-[![Build Status](https://travis-ci.org/tzmfreedom/metamind-ruby.svg?branch=master)](https://travis-ci.org/tzmfreedom/metamind-ruby)
+[![Build Status](https://travis-ci.org/tzmfreedom/salesforce-einstein.svg?branch=master)](https://travis-ci.org/tzmfreedom/salesforce-einstein)
 
-API Client for Salesforce MetaMind(http://metamind.io)
+API Client for [Salesforce Einstein](https://einstein.ai).
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'metamind'
+gem 'salesforce-einstein'
 ```
 
 And then execute:
@@ -18,21 +18,21 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install metamind
+    $ gem install salesforce-einstein
 
 ## Usage
 
 - Initialize Client
 ```ruby
-client = Metamind::Client.new(cert: '/path/to/certificate', 
-                              password: 'certificate password', 
-                              email: 'metamind account email')
+client = Salesforce::Einstein::Client.new(cert: '/path/to/certificate', 
+                                          password: 'certificate password', 
+                                          email: 'einstein account email')
 ```
 or
 ```ruby
-client = Metamind::Client.new(private_key: '/path/to/private_key', 
-                              password: 'private_key password', 
-                              email: 'metamind account email')
+client = Salesforce::Einstein::Client.new(private_key: '/path/to/private_key', 
+                                          password: 'private_key password', 
+                                          email: 'einstein account email')
 ```
 
 - Prediction with Image URL
@@ -123,7 +123,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/tzmfreedom/metamind.
+Bug reports and pull requests are welcome on GitHub at https://github.com/tzmfreedom/salesforce-einstein.
 
 
 ## License

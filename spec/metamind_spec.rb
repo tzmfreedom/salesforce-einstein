@@ -52,7 +52,7 @@ describe Metamind do
     end
   end
 
-  describe 'Call Salesforce MetaMind API' do
+  describe 'Call Salesforce Einstein API' do
     let(:dataset_id) { '1' }
     let(:client) {
       stub_request(:post, 'https://api.metamind.io/v1/oauth2/token')
