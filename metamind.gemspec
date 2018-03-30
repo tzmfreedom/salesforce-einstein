@@ -37,4 +37,10 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "webmock", "~> 2.1"
   spec.add_development_dependency "timecop", "~> 0.8"
+
+  spec.post_install_message = <<-MESSAGE
+ ! The 'oldname' gem has been deprecated and has been replaced by 'newname'.
+ ! See: https://rubygems.org/gems/newname
+ ! And: https://github.com/YourID/newname
+  MESSAGE
 end

@@ -3,6 +3,8 @@ require 'jwt'
 require 'net/https'
 require 'securerandom'
 
+warn '[DEPRECATION] This gem has been renamed to `salesforce-einstein` and will no longer be supported. Please switch to `salesforce-einstein` as soon as possible.'
+
 module Metamind
   CRLF = "\r\n"
   METAMIND_VISION_API = 'https://api.metamind.io/v1/vision'
