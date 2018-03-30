@@ -39,8 +39,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "timecop", "~> 0.8"
 
   spec.post_install_message = <<-MESSAGE
- ! The 'oldname' gem has been deprecated and has been replaced by 'newname'.
- ! See: https://rubygems.org/gems/newname
- ! And: https://github.com/YourID/newname
+ ! The 'metamind' gem has been deprecated and has been replaced by 'salesforce-einstein'
+ ! See: https://rubygems.org/gems/salesforce-einstein
+ ! And: https://github.com/tzmfreedom/salesforce-einstein
   MESSAGE
 end
