@@ -38,6 +38,14 @@ module Salesforce
           @token_info['access_token']
         end
 
+        def get_api_usage
+          get '/apiusage'
+        end
+
+        def delete_reflesh_token(token)
+          delete "/oauth2/token/#{token}"
+        end
+
         private
 
         def client
@@ -71,7 +79,6 @@ module Salesforce
             req.url "#{BASE_URI}#{path}"
             req.headers['Content-Type'] = 'multipart/form-data'
             req.headers['Authorization'] = "Bearer #{access_token}"
-            req.body = params
           end
           response ? JSON.parse(response.body) : nil
         end

@@ -19,8 +19,8 @@ module Salesforce
           post '/vision/predict', { sampleBase64Content: base64_string, modelId: modelId }
         end
 
-        def create_dataset(name, labels)
-          post '/vision/datasets', { name: name, labels: labels }
+        def create_dataset(name, labels, type = 'image')
+          post '/vision/datasets', { type: type, name: name, labels: labels }
         end
 
         def get_all_datasets
@@ -35,6 +35,10 @@ module Salesforce
           delete "/vision/datasets/#{dataset_id}"
         end
 
+        def get_deletion_status(deletion_id)
+          get "/vision/deletion/#{deletion_id}"
+        end
+
         def create_label(dataset_id, name)
           post "/vision/datasets/#{dataset_id}/labels", name: name
         end
@@ -47,12 +51,12 @@ module Salesforce
           post "/vision/datasets/#{dataset_id}/examples", params
         end
 
-        def get_example(dataset_id, example_id)
-          get "/vision/datasets/#{dataset_id}/examples/#{example_id}"
+        def get_all_examples(dataset_id)
+          get "/vision/datasets/#{dataset_id}/examples"
         end
 
-        def get_all_example(dataset_id)
-          get "/vision/datasets/#{dataset_id}/examples"
+        def get_all_examples_for_label(dataset_id, label_id)
+          get "/vision/datasets/#{dataset_id}/examples?labelId=#{label_id}"
         end
 
         def delete_example(dataset_id, example_id)
@@ -61,6 +65,10 @@ module Salesforce
 
         def train_dataset(params)
           post '/vision/train', params
+        end
+
+        def retain_dataset(params)
+          post "/vision/retrain", params
         end
 
         def get_training_status(model_id)
