@@ -1,12 +1,10 @@
-require 'jwt'
-require 'net/https'
-require 'faraday'
-require 'securerandom'
+require 'salesforce/einstein/base'
 
 module Salesforce
   module Einstein
     module V2
-      module Vision
+      class VisionClient < Salesforce::Einstein::Base
+
         def predict_with_url(url, modelId = 'GeneralImageClassifier')
           post '/vision/predict', { sampleLocation: url, modelId: modelId }
         end
@@ -84,6 +82,8 @@ module Salesforce
         end
       end
     end
+
+    VisionClient = V2::VisionClient
   end
 end
 
