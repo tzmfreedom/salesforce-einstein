@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'jwt'
 require 'net/https'
 require 'faraday'
@@ -12,12 +14,12 @@ module Salesforce
 
       def initialize(cert: nil, private_key: nil, password: nil, email:, timeout: 3600)
         if cert.nil? && private_key.nil?
-          raise ArgumentError.new 'At least one parameter must be specified: cert or private_key'
+          raise ArgumentError, 'At least one parameter must be specified: cert or private_key'
         end
 
         if cert
           cert_contents = File.read(File.expand_path(cert))
-          pkcs12 = OpenSSL::PKCS12::new(cert_contents, password)
+          pkcs12 = OpenSSL::PKCS12.new(cert_contents, password)
           @private_key = pkcs12.key
         else
           private_key_contents = File.read(File.expand_path(private_key))

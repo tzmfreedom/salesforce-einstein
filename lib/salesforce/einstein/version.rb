@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Salesforce
   module Einstein
     VERSION = '0.0.1'

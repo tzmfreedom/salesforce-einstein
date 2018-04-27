@@ -1,12 +1,13 @@
+# frozen_string_literal: true
+
 require 'salesforce/einstein/base'
 
 module Salesforce
   module Einstein
     module V2
       class VisionClient < Salesforce::Einstein::Base
-
         def predict_with_url(url, modelId = 'GeneralImageClassifier')
-          post '/vision/predict', { sampleLocation: url, modelId: modelId }
+          post '/vision/predict', sampleLocation: url, modelId: modelId
         end
 
         # def predict_with_file path, modelId = 'GeneralImageClassifier'
@@ -14,18 +15,18 @@ module Salesforce
         # end
 
         def predict_with_base64(base64_string, modelId = 'GeneralImageClassifier')
-          post '/vision/predict', { sampleBase64Content: base64_string, modelId: modelId }
+          post '/vision/predict', sampleBase64Content: base64_string, modelId: modelId
         end
 
         def create_dataset(name, labels, type = 'image')
-          post '/vision/datasets', { type: type, name: name, labels: labels }
+          post '/vision/datasets', type: type, name: name, labels: labels
         end
 
-        def get_all_datasets
+        def all_datasets
           get '/vision/datasets'
         end
 
-        def get_dataset(dataset_id)
+        def dataset(dataset_id)
           get "/vision/datasets/#{dataset_id}"
         end
 
@@ -33,7 +34,7 @@ module Salesforce
           delete "/vision/datasets/#{dataset_id}"
         end
 
-        def get_deletion_status(deletion_id)
+        def deletion_status(deletion_id)
           get "/vision/deletion/#{deletion_id}"
         end
 
@@ -41,7 +42,7 @@ module Salesforce
           post "/vision/datasets/#{dataset_id}/labels", name: name
         end
 
-        def get_label(dataset_id, label_id)
+        def label(dataset_id, label_id)
           get "/vision/datasets/#{dataset_id}/labels/#{label_id}"
         end
 
@@ -49,11 +50,11 @@ module Salesforce
           post "/vision/datasets/#{dataset_id}/examples", params
         end
 
-        def get_all_examples(dataset_id)
+        def all_examples(dataset_id)
           get "/vision/datasets/#{dataset_id}/examples"
         end
 
-        def get_all_examples_for_label(dataset_id, label_id)
+        def all_examples_for_label(dataset_id, label_id)
           get "/vision/datasets/#{dataset_id}/examples?labelId=#{label_id}"
         end
 
@@ -66,18 +67,18 @@ module Salesforce
         end
 
         def retain_dataset(params)
-          post "/vision/retrain", params
+          post '/vision/retrain', params
         end
 
-        def get_training_status(model_id)
+        def training_status(model_id)
           get "/vision/train/#{model_id}"
         end
 
-        def get_model_metrics(model_id)
+        def model_metrics(model_id)
           get "/vision/models/#{model_id}"
         end
 
-        def get_all_models(dataset_id)
+        def all_models(dataset_id)
           get "/datasets/#{dataset_id}/models"
         end
       end
@@ -86,4 +87,3 @@ module Salesforce
     VisionClient = V2::VisionClient
   end
 end
-

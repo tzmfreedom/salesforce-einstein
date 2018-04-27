@@ -1,20 +1,21 @@
+# frozen_string_literal: true
+
 require 'salesforce/einstein/base'
 
 module Salesforce
   module Einstein
     module V2
       class LanguageClient < Salesforce::Einstein::Base
-
-        def predict_for_intent(document: , model_id: 'CommunitySentiment', num_results: nil, sample_id: nil)
-          post '/language/intent', { document: document, modelId: model_id, numResults: num_results, sampleId: sample_id }
+        def predict_for_intent(document:, model_id: 'CommunitySentiment', num_results: nil, sample_id: nil)
+          post '/language/intent', document: document, modelId: model_id, numResults: num_results, sampleId: sample_id
         end
 
-        def predict_for_sentiment(document: , model_id: 'CommunitySentiment', num_results: nil, sample_id: nil)
-          post '/language/sentiment', { document: document, modelId: model_id, numResults: num_results, sampleId: sample_id }
+        def predict_for_sentiment(document:, model_id: 'CommunitySentiment', num_results: nil, sample_id: nil)
+          post '/language/sentiment', document: document, modelId: model_id, numResults: num_results, sampleId: sample_id
         end
 
         def create_dataset(name, labels, type = 'image')
-          post '/language/datasets', { type: type, name: name, labels: labels }
+          post '/language/datasets', type: type, name: name, labels: labels
         end
 
         def create_dataset_from_file(sync: true, data: nil, name: nil, path: nil, type: 'text-intent')
@@ -24,11 +25,11 @@ module Salesforce
           post "/language/datasets/upload#{sync ? '/sync' : ''}", params
         end
 
-        def get_all_datasets
+        def all_datasets
           get '/language/datasets'
         end
 
-        def get_dataset(dataset_id)
+        def dataset(dataset_id)
           get "/language/datasets/#{dataset_id}"
         end
 
@@ -36,7 +37,7 @@ module Salesforce
           delete "/language/datasets/#{dataset_id}"
         end
 
-        def get_deletion_status(deletion_id)
+        def deletion_status(deletion_id)
           get "/language/deletion/#{deletion_id}"
         end
 
@@ -44,7 +45,7 @@ module Salesforce
           post "/language/datasets/#{dataset_id}/labels", name: name
         end
 
-        def get_label(dataset_id, label_id)
+        def label(dataset_id, label_id)
           get "/language/datasets/#{dataset_id}/labels/#{label_id}"
         end
 
@@ -52,11 +53,11 @@ module Salesforce
           post "/language/datasets/#{dataset_id}/examples", params
         end
 
-        def get_all_examples(dataset_id)
+        def all_examples(dataset_id)
           get "/language/datasets/#{dataset_id}/examples"
         end
 
-        def get_all_examples_for_label(dataset_id, label_id)
+        def all_examples_for_label(dataset_id, label_id)
           get "/language/datasets/#{dataset_id}/examples?labelId=#{label_id}"
         end
 
@@ -64,23 +65,23 @@ module Salesforce
           delete "/language/datasets/#{dataset_id}/examples/#{example_id}"
         end
 
-        def train_dataset(dataset_id: , name: )
-          post '/language/train', { datasetId: dataset_id, name: name }
+        def train_dataset(dataset_id:, name:)
+          post '/language/train', datasetId: dataset_id, name: name
         end
 
         def retain_dataset(params)
-          post "/language/retrain", params
+          post '/language/retrain', params
         end
 
-        def get_training_status(model_id)
+        def training_status(model_id)
           get "/language/train/#{model_id}"
         end
 
-        def get_model_metrics(model_id)
+        def model_metrics(model_id)
           get "/language/models/#{model_id}"
         end
 
-        def get_all_models(dataset_id)
+        def all_models(dataset_id)
           get "/language/datasets/#{dataset_id}/models"
         end
       end
@@ -89,4 +90,3 @@ module Salesforce
     LanguageClient = V2::LanguageClient
   end
 end
-
